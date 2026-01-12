@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carteira Inteligente | Dízimo & Controle Financeiro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --bg-light: #f0f4f8;
+            --bg-dark: #121826;
+            --card-light: #ffffff;
+            --card-dark: #1e293b;
+            --text-light: #333333;
+            --text-dark: #e2e8f0;
+            --dizimo: #ff6b6b;
+            --dizimo-bg: #fff5f5;
+            --dizimo-dark-bg: #2e1a1a;
+            --timeline: #8854d0;
+            --timeline-dark: #a55eea;
+            --paid: #4ade80;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo i {
+            color: var(--success);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: var(--dark);
+        }
+
+        .btn-dizimo {
+            background-color: var(--dizimo);
+            color: white;
+        }
+
+        .btn-paid {
+            background-color: var(--paid);
+            color: white;
+        }
+
+        .btn-dark {
+            background-color: var(--dark);
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 901px) {
+            .dashboard {
+                grid-template-columns: 1fr 320px;
+            }
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-light);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+        }
+
+        body.dark-mode .card {
+            background: var(--card-dark);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .balance-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(67, 97, 238, 0.08);
+            border-radius: 10px;
+        }
+
+        body.dark-mode .balance-row {
+            background: rgba(67, 97, 238, 0.15);
+        }
+
+        .balance-label {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .balance-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .dizimo-value {
+            color: var(--dizimo);
+        }
+
+        .paid-value {
+            color: var(--paid);
+        }
+
+        .form-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 601px) {
+            .form-section {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            font-size: 1rem;
+            background: white;
+        }
+
+        body.dark-mode .form-control {
+            background: #334155;
+            border-color: #475569;
+            color: white;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: var(--timeline);
+            border-radius: 10px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--timeline);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--timeline);
+        }
+
+        .timeline-date {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .timeline-content {
+            background: var(--card-light);
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode .timeline-content {
+            background: var(--card-dark);
+        }
+
+        .history-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        body.dark-mode .history-item {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-desc {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .history-date {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .history-amount {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .paid-item {
+            background: rgba(74, 222, 128, 0.1);
+            border-left: 3px solid var(--paid);
+        }
+
+        .paid-amount {
+            color: var(--paid);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .action-btn {
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: var(--dizimo);
+            color: white;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .clock-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .clock-time {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 8px 0;
+            color: var(--primary);
+        }
+
+        .clock-date {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        .exchange-card {
+            text-align: center;
+        }
+
+        .exchange-rate {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success);
+            margin: 12px 0;
+        }
+
+        .exchange-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .insight-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .insight-title {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .insight-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .panel-section {
+            display: none;
+        }
+
+        #controlPanel {
+            display: none;
+        }
+
+        #controlPanel.active {
+            display: block;
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 2px solid rgba(67, 97, 238, 0.2);
+            margin-bottom: 15px;
+        }
+
+        .nav-tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            font-size: 0.95rem;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .chart-container {
+            height: 200px;
+            margin-top: 15px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            background: rgba(67, 97, 238, 0.03);
+        }
+
+        body.dark-mode .chart-container {
+            border-color: #475569;
+            background: rgba(67, 97, 238, 0.05);
+        }
+
+        .chart-placeholder {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .chart-placeholder i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+
+        .chart-placeholder h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .chart-placeholder p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .manual-chart {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        .chart-bar {
+            width: 100%;
+            background: var(--primary);
+            border-radius: 4px 4px 0 0;
+            margin-bottom: 4px;
+            position: relative;
+            transition: height 0.5s ease;
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -22px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .chart-value {
+            position: absolute;
+            top: -22px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 0.85rem;
+        }
+
+        .dizimo-bar {
+            background: var(--dizimo);
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: var(--success);
+            color: white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transform: translateX(200%);
+            transition: transform 0.4s ease;
+            font-size: 0.95rem;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(76, 201, 240, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 201, 240, 0); }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-pending {
+            background-color: var(--dizimo);
+        }
+
+        .status-paid {
+            background-color: var(--paid);
+        }
+
+        .status-text {
+            font-weight: 600;
+        }
+
+        /* Mobile menu for small screens */
+        .mobile-menu {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .mobile-menu {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background: var(--bg-light);
+                padding: 15px;
+                border-bottom: 2px solid var(--primary);
+                z-index: 100;
+            }
+            
+            body.dark-mode .mobile-menu {
+                background: var(--bg-dark);
+            }
+            
+            .mobile-menu select {
+                width: 100%;
+                padding: 8px;
+                border-radius: 6px;
+                border: 1px solid #ddd;
+                font-size: 1rem;
+            }
+            
+            body.dark-mode .mobile-menu select {
+                background: var(--card-dark);
+                color: var(--text-dark);
+                border-color: #475569;
+            }
+            
+            .controls {
+                display: none;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .balance-value {
+                font-size: 1.2rem;
+            }
+            
+            .clock-time {
+                font-size: 1.8rem;
+            }
+            
+            .exchange-rate {
+                font-size: 1.3rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                margin-left: 0;
+                margin-top: 8px;
+            }
+        }
+
+        /* Ensure proper scrolling on mobile */
+        html, body {
+            overflow-x: hidden;
+        }
+
+        .container {
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-light);
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .modal-content {
+            background: var(--card-dark);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-form {
+            display: grid;
+            gap: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <select id="mobileMenu">
+            <option value="">☰ Menu Principal</option>
+            <option value="dashboard">Dashboard</option>
+            <option value="controlPanel">Painel de Controle</option>
+        </select>
+    </div>
+
+    <!-- Edit Entry Modal -->
+    <div id="editEntryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Entrada</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form class="modal-form" id="editEntryForm">
+                <input type="hidden" id="editEntryId">
+                <div class="form-group">
+                    <label for="editAmount">Valor (R$)</label>
+                    <input type="number" id="editAmount" class="form-control" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDescription">Descrição</label>
+                    <input type="text" id="editDescription" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDate">Data</label>
+                    <input type="date" id="editDate" class="form-control" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-dizimo close-modal-btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Dizimo Modal -->
+    <div id="editDizimoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Editar Pagamento do Dízimo</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form class="modal-form" id="editDizimoForm">
+                <input type="hidden" id="editDizimoId">
+                <div class="form-group">
+                    <label for="editDizimoAmount">Valor (R$)</label>
+                    <input type="number" id="editDizimoAmount" class="form-control" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDizimoDate">Data</label>
+                    <input type="date" id="editDizimoDate" class="form-control" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-paid">Salvar</button>
+                    <button type="button" class="btn btn-dizimo close-modal-btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-wallet"></i>
+                <span>Carteira Inteligente</span>
+            </div>
+            <div class="controls">
+                <button id="darkModeToggle" class="btn btn-dark">
+                    <i class="fas fa-moon"></i> Modo Escuro
+                </button>
+                <button id="panelToggle" class="btn btn-primary">
+                    <i class="fas fa-tachometer-alt"></i> Painel
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <div class="main-content">
+                <!-- Balance Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Saldo Atual</h2>
+                    </div>
+                    <div class="balance-section">
+                        <div class="balance-row">
+                            <span class="balance-label">Saldo Total:</span>
+                            <span id="totalBalance" class="balance-value">R$ 0,00</span>
+                        </div>
+                        <div class="balance-row">
+                            <span class="balance-label">Dízimo (10%):</span>
+                            <span id="dizimoValue" class="balance-value dizimo-value">R$ 0,00</span>
+                        </div>
+                        <div class="balance-row">
+                            <span class="balance-label">Dízimo Pago:</span>
+                            <span id="paidDizimoValue" class="balance-value paid-value">R$ 0,00</span>
+                        </div>
+                        <div class="balance-row pulse">
+                            <span class="balance-label">Status do Dízimo:</span>
+                            <span id="dizimoStatus" class="balance-value">
+                                <span class="status-indicator status-pending"></span>
+                                <span class="status-text">Pendente</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Income Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Adicionar Renda</h2>
+                    </div>
+                    <div class="form-section">
+                        <div>
+                            <div class="form-group">
+                                <label for="amount">Valor (R$)</label>
+                                <input type="number" id="amount" class="form-control" placeholder="0.00" step="0.01" min="0" value="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Descrição</label>
+                                <input type="text" id="description" class="form-control" placeholder="Ex: Salário, Freelance..." value="Exemplo">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="date">Data</label>
+                                <input type="date" id="date" class="form-control">
+                            </div>
+                            <button id="addEntry" class="btn btn-success" style="width: 100%; margin-top: 20px;">
+                                <i class="fas fa-plus-circle"></i> Adicionar Entrada
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pay Dizimo Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Registrar Pagamento do Dízimo</h2>
+                    </div>
+                    <div class="form-section">
+                        <div>
+                            <div class="form-group">
+                                <label for="dizimoAmount">Valor do Dízimo (R$)</label>
+                                <input type="number" id="dizimoAmount" class="form-control" placeholder="0.00" step="0.01" min="0">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="dizimoDate">Data do Pagamento</label>
+                                <input type="date" id="dizimoDate" class="form-control">
+                            </div>
+                            <button id="payDizimo" class="btn btn-paid" style="width: 100%; margin-top: 20px;">
+                                <i class="fas fa-hand-holding-usd"></i> Registrar Pagamento
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Monthly -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Linha do Tempo Mensal</h2>
+                    </div>
+                    <div class="timeline" id="timeline">
+                        <!-- Timeline items will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Histórico de Entradas</h2>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <div id="noHistory">Nenhuma entrada registrada ainda.</div>
+                    </div>
+                </div>
+
+                <!-- Dizimo Payment History -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Histórico de Pagamentos do Dízimo</h2>
+                    </div>
+                    <div class="history-list" id="dizimoHistoryList">
+                        <div id="noDizimoHistory">Nenhum pagamento registrado ainda.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Clock -->
+                <div class="card clock-card">
+                    <h3 class="card-title">Horário Atual</h3>
+                    <div id="currentTime" class="clock-time">--:--:--</div>
+                    <div id="currentDate" class="clock-date">--/--/----</div>
+                </div>
+
+                <!-- Exchange Rate -->
+                <div class="card exchange-card">
+                    <h3 class="card-title">Cotação do Dólar</h3>
+                    <div id="exchangeRate" class="exchange-rate">Carregando...</div>
+                    <div class="exchange-label">USD/BRL • Atualizado agora</div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Ações Rápidas</h2>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button id="exportData" class="btn btn-primary">
+                            <i class="fas fa-file-export"></i> Exportar
+                        </button>
+                        <button id="importData" class="btn btn-primary">
+                            <i class="fas fa-file-import"></i> Importar
+                        </button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                        <button id="clearData" class="btn btn-dizimo">
+                            <i class="fas fa-trash-alt"></i> Limpar Dados
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Insights -->
+                <div class="card insight-card">
+                    <h3 class="insight-title">Visão Geral</h3>
+                    <div class="insight-value" id="totalEntries">0</div>
+                    <div>Movimentações registradas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div id="controlPanel" class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Painel de Controle</h2>
+                    <button id="closePanel" class="btn btn-dark">
+                        <i class="fas fa-times"></i> Fechar
+                    </button>
+                </div>
+
+                <div class="nav-tabs">
+                    <div class="nav-tab active" data-tab="stats">Estatísticas</div>
+                    <div class="nav-tab" data-tab="charts">Gráficos</div>
+                    <div class="nav-tab" data-tab="settings">Configurações</div>
+                </div>
+
+                <div id="statsTab" class="tab-content active">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                        <div class="card">
+                            <h3>Média Mensal</h3>
+                            <div class="balance-value" id="avgMonthly">R$ 0,00</div>
+                        </div>
+                        <div class="card">
+                            <h3>Maior Entrada</h3>
+                            <div class="balance-value" id="maxEntry">R$ 0,00</div>
+                        </div>
+                        <div class="card">
+                            <h3>Total Dízimo</h3>
+                            <div class="balance-value dizimo-value" id="totalDizimo">R$ 0,00</div>
+                        </div>
+                        <div class="card">
+                            <h3>Dízimo Pago</h3>
+                            <div class="balance-value paid-value" id="totalPaidDizimo">R$ 0,00</div>
+                        </div>
+                    </div>
+
+                    <h3>Últimas 5 Entradas</h3>
+                    <div id="recentEntries" style="margin-top: 15px;">
+                        <p>Nenhuma entrada registrada.</p>
+                    </div>
+                </div>
+
+                <div id="chartsTab" class="tab-content">
+                    <h3>Entradas Mensais</h3>
+                    <div class="chart-container">
+                        <div id="monthlyChartContainer" class="manual-chart"></div>
+                    </div>
+                    <h3>Dízimos Mensais</h3>
+                    <div class="chart-container">
+                        <div id="dizimoChartContainer" class="manual-chart"></div>
+                    </div>
+                </div>
+
+                <div id="settingsTab" class="tab-content">
+                    <div class="form-group">
+                        <label>Porcentagem do Dízimo</label>
+                        <input type="range" id="dizimoPercent" min="1" max="20" value="10" class="form-control" style="margin: 10px 0;">
+                        <span id="dizimoPercentValue">10%</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Moeda Padrão</label>
+                        <select id="currencySelect" class="form-control">
+                            <option value="BRL">Real (R$)</option>
+                            <option value="USD">Dólar (US$)</option>
+                        </select>
+                    </div>
+                    <button id="saveSettings" class="btn btn-success" style="margin-top: 15px;">
+                        <i class="fas fa-save"></i> Salvar Configurações
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast">
+            <i class="fas fa-check-circle"></i> Operação realizada com sucesso!
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const panelToggle = document.getElementById('panelToggle');
+        const closePanel = document.getElementById('closePanel');
+        const dashboard = document.getElementById('dashboard');
+        const controlPanel = document.getElementById('controlPanel');
+        const addEntryBtn = document.getElementById('addEntry');
+        const payDizimoBtn = document.getElementById('payDizimo');
+        const exportDataBtn = document.getElementById('exportData');
+        const importDataBtn = document.getElementById('importData');
+        const importFile = document.getElementById('importFile');
+        const clearDataBtn = document.getElementById('clearData');
+        const navTabs = document.querySelectorAll('.nav-tab');
+        const saveSettingsBtn = document.getElementById('saveSettings');
+        const dizimoPercent = document.getElementById('dizimoPercent');
+        const dizimoPercentValue = document.getElementById('dizimoPercentValue');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        // Modal elements
+        const editEntryModal = document.getElementById('editEntryModal');
+        const editDizimoModal = document.getElementById('editDizimoModal');
+        const editEntryForm = document.getElementById('editEntryForm');
+        const editDizimoForm = document.getElementById('editDizimoForm');
+        const closeModals = document.querySelectorAll('.close-modal, .close-modal-btn');
+
+        // Balance elements
+        const totalBalanceEl = document.getElementById('totalBalance');
+        const dizimoValueEl = document.getElementById('dizimoValue');
+        const paidDizimoValueEl = document.getElementById('paidDizimoValue');
+        const dizimoStatusEl = document.getElementById('dizimoStatus');
+        const historyList = document.getElementById('historyList');
+        const noHistory = document.getElementById('noHistory');
+        const dizimoHistoryList = document.getElementById('dizimoHistoryList');
+        const noDizimoHistory = document.getElementById('noDizimoHistory');
+        const timelineEl = document.getElementById('timeline');
+        const totalEntriesEl = document.getElementById('totalEntries');
+        const avgMonthlyEl = document.getElementById('avgMonthly');
+        const maxEntryEl = document.getElementById('maxEntry');
+        const totalDizimoEl = document.getElementById('totalDizimo');
+        const totalPaidDizimoEl = document.getElementById('totalPaidDizimo');
+        const recentEntriesEl = document.getElementById('recentEntries');
+
+        // Clock elements
+        const currentTimeEl = document.getElementById('currentTime');
+        const currentDateEl = document.getElementById('currentDate');
+
+        // Exchange rate
+        const exchangeRateEl = document.getElementById('exchangeRate');
+
+        // Toast
+        const toast = document.getElementById('toast');
+
+        // Chart containers
+        const monthlyChartContainer = document.getElementById('monthlyChartContainer');
+        const dizimoChartContainer = document.getElementById('dizimoChartContainer');
+
+        // State
+        let entries = JSON.parse(localStorage.getItem('walletEntries')) || [];
+        let dizimoPayments = JSON.parse(localStorage.getItem('dizimoPayments')) || [];
+        let dizimoPercentage = parseFloat(localStorage.getItem('dizimoPercentage')) || 10;
+        dizimoPercent.value = dizimoPercentage;
+        dizimoPercentValue.textContent = `${dizimoPercentage}%`;
+
+        // Initialize
+        function init() {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            updateExchangeRate();
+            renderEntries();
+            renderDizimoHistory();
+            updateStats();
+            renderTimeline();
+            checkDarkMode();
+            
+            // Add sample data for testing if no data exists
+            if (entries.length === 0 && dizimoPayments.length === 0) {
+                addSampleData();
+            } else {
+                // Render initial charts
+                renderManualCharts();
+            }
+        }
+
+        // Add sample data for testing
+        function addSampleData() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const prevMonth = String(today.getMonth()).padStart(2, '0');
+            
+            entries = [
+                { id: 1, amount: 2500.00, description: "Salário", date: `${year}-${month}-05`, timestamp: new Date().toISOString() },
+                { id: 2, amount: 350.50, description: "Freelance", date: `${year}-${month}-15`, timestamp: new Date().toISOString() },
+                { id: 3, amount: 1200.00, description: "Bônus", date: `${year}-${month}-28`, timestamp: new Date().toISOString() }
+            ];
+            
+            if (today.getMonth() > 0) {
+                entries.push(
+                    { id: 4, amount: 2400.00, description: "Salário Mês Anterior", date: `${year}-${prevMonth}-05`, timestamp: new Date().toISOString() }
+                );
+            }
+            
+            // Add sample payment
+            dizimoPayments = [
+                { id: 1, amount: 250.00, date: `${year}-${month}-10`, timestamp: new Date().toISOString() }
+            ];
+            
+            saveData();
+            renderEntries();
+            renderDizimoHistory();
+            updateStats();
+            renderTimeline();
+            renderManualCharts();
+        }
+
+        // Save all data to localStorage
+        function saveData() {
+            localStorage.setItem('walletEntries', JSON.stringify(entries));
+            localStorage.setItem('dizimoPayments', JSON.stringify(dizimoPayments));
+            localStorage.setItem('dizimoPercentage', dizimoPercentage);
+        }
+
+        // Dark mode
+        function checkDarkMode() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i> Modo Claro';
+            }
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            darkModeToggle.innerHTML = isDark 
+                ? '<i class="fas fa-sun"></i> Modo Claro' 
+                : '<i class="fas fa-moon"></i> Modo Escuro';
+        });
+
+        // Panel toggle
+        panelToggle.addEventListener('click', () => {
+            dashboard.style.display = 'none';
+            controlPanel.classList.add('active');
+        });
+
+        closePanel.addEventListener('click', () => {
+            controlPanel.classList.remove('active');
+            dashboard.style.display = 'grid';
+        });
+
+        // Mobile menu
+        mobileMenu.addEventListener('change', (e) => {
+            if (e.target.value === 'dashboard') {
+                controlPanel.classList.remove('active');
+                dashboard.style.display = 'grid';
+                mobileMenu.value = '';
+            } else if (e.target.value === 'controlPanel') {
+                dashboard.style.display = 'none';
+                controlPanel.classList.add('active');
+                mobileMenu.value = '';
+            }
+        });
+
+        // Tab navigation
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                navTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const tabContents = document.querySelectorAll('.tab-content');
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                const targetTab = tab.getAttribute('data-tab');
+                document.getElementById(targetTab + 'Tab').classList.add('active');
+                
+                // Render charts when switching to charts tab
+                if (targetTab === 'charts') {
+                    renderManualCharts();
+                }
+            });
+        });
+
+        // Close modals
+        closeModals.forEach(btn => {
+            btn.addEventListener('click', () => {
+                editEntryModal.style.display = 'none';
+                editDizimoModal.style.display = 'none';
+            });
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === editEntryModal) {
+                editEntryModal.style.display = 'none';
+            }
+            if (e.target === editDizimoModal) {
+                editDizimoModal.style.display = 'none';
+            }
+        });
+
+        // Date & Time
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Time
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            currentTimeEl.textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Date
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = now.toLocaleDateString('pt-BR', options);
+            currentDateEl.textContent = formattedDate;
+            
+            // Set default date in forms
+            const dateInput = document.getElementById('date');
+            const dizimoDateInput = document.getElementById('dizimoDate');
+            if (!dateInput.value) {
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                dateInput.value = `${year}-${month}-${day}`;
+                dizimoDateInput.value = `${year}-${month}-${day}`;
+            }
+        }
+
+        // Exchange Rate
+        async function updateExchangeRate() {
+            try {
+                const response = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+                if (!response.ok) throw new Error('API indisponível');
+                
+                const data = await response.json();
+                const rate = parseFloat(data.USDBRL.bid).toFixed(2);
+                exchangeRateEl.textContent = `R$ ${rate}`;
+                localStorage.setItem('lastExchangeRate', rate);
+                localStorage.setItem('exchangeRateTime', Date.now());
+            } catch (error) {
+                const savedRate = localStorage.getItem('lastExchangeRate');
+                if (savedRate) {
+                    exchangeRateEl.textContent = `R$ ${savedRate}`;
+                } else {
+                    exchangeRateEl.textContent = 'R$ 5,40';
+                }
+                console.warn('Falha ao obter cotação. Usando valor salvo ou padrão.');
+            }
+        }
+
+        // Format currency
+        function formatCurrency(value, currency = 'BRL') {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: currency
+            }).format(value);
+        }
+
+        // CORREÇÃO CRÍTICA: Função para formatar data corretamente (YYYY-MM-DD)
+        function formatDateForStorage(dateString) {
+            // Se já estiver no formato YYYY-MM-DD, retorna como está
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+                return dateString;
+            }
+            
+            // Se estiver no formato DD/MM/YYYY, converte para YYYY-MM-DD
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) {
+                const parts = dateString.split('/');
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            
+            // Se for um objeto Date, formata corretamente
+            if (dateString instanceof Date) {
+                const year = dateString.getFullYear();
+                const month = String(dateString.getMonth() + 1).padStart(2, '0');
+                const day = String(dateString.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            
+            // Caso contrário, tenta criar um Date e formatar
+            const date = new Date(dateString);
+            if (!isNaN(date.getTime())) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            
+            // Retorna a string original se não conseguir formatar
+            return dateString;
+        }
+
+        // CORREÇÃO PRINCIPAL: Função para obter o mês/ano de uma data SEM usar new Date()
+        function getMonthYearFromDate(dateString) {
+            // Garantir que a data esteja no formato YYYY-MM-DD
+            const formattedDate = formatDateForStorage(dateString);
+            
+            // Extrair ano e mês diretamente da string no formato YYYY-MM-DD
+            const match = formattedDate.match(/^(\d{4})-(\d{2})-\d{2}$/);
+            if (match) {
+                const year = match[1];
+                const month = match[2];
+                return `${year}-${month}`;
+            }
+            
+            console.error('Formato de data inválido:', dateString);
+            return null;
+        }
+
+        // Add new entry
+        addEntryBtn.addEventListener('click', () => {
+            const amountInput = document.getElementById('amount');
+            const descriptionInput = document.getElementById('description');
+            const dateInput = document.getElementById('date');
+
+            const amount = parseFloat(amountInput.value);
+            const description = descriptionInput.value.trim();
+            const date = dateInput.value;
+
+            if (!amount || amount <= 0) {
+                showToast('Por favor, insira um valor válido.');
+                return;
+            }
+
+            if (!description) {
+                showToast('Por favor, adicione uma descrição.');
+                return;
+            }
+
+            if (!date) {
+                showToast('Por favor, selecione uma data.');
+                return;
+            }
+
+            // CORREÇÃO: Garantir que a data esteja no formato correto
+            const formattedDate = formatDateForStorage(date);
+
+            const newEntry = {
+                id: Date.now(),
+                amount,
+                description,
+                date: formattedDate, // Usar data formatada
+                timestamp: new Date().toISOString()
+            };
+
+            entries.unshift(newEntry);
+            saveData();
+            renderEntries();
+            updateStats();
+            renderTimeline();
+            renderManualCharts();
+            
+            // Reset form
+            amountInput.value = '';
+            descriptionInput.value = '';
+            
+            showToast('Entrada adicionada com sucesso!');
+        });
+
+        // Pay Dizimo
+        payDizimoBtn.addEventListener('click', () => {
+            const amountInput = document.getElementById('dizimoAmount');
+            const dateInput = document.getElementById('dizimoDate');
+
+            const amount = parseFloat(amountInput.value);
+            const date = dateInput.value;
+
+            if (!amount || amount <= 0) {
+                showToast('Por favor, insira um valor válido para o dízimo.');
+                return;
+            }
+
+            if (!date) {
+                showToast('Por favor, selecione a data do pagamento.');
+                return;
+            }
+
+            // CORREÇÃO: Garantir que a data esteja no formato correto
+            const formattedDate = formatDateForStorage(date);
+
+            const newPayment = {
+                id: Date.now(),
+                amount,
+                date: formattedDate, // Usar data formatada
+                timestamp: new Date().toISOString()
+            };
+
+            dizimoPayments.unshift(newPayment);
+            saveData();
+            renderDizimoHistory();
+            updateStats();
+            renderTimeline();
+            renderManualCharts();
+            
+            // Reset form
+            amountInput.value = '';
+            
+            showToast('Pagamento do dízimo registrado com sucesso!');
+        });
+
+        // Edit entry
+        function openEditEntry(entry) {
+            document.getElementById('editEntryId').value = entry.id;
+            document.getElementById('editAmount').value = entry.amount;
+            document.getElementById('editDescription').value = entry.description;
+            // CORREÇÃO: Exibir a data no formato YYYY-MM-DD para o input date
+            document.getElementById('editDate').value = entry.date;
+            editEntryModal.style.display = 'flex';
+        }
+
+        // Edit dizimo payment
+        function openEditDizimo(payment) {
+            document.getElementById('editDizimoId').value = payment.id;
+            document.getElementById('editDizimoAmount').value = payment.amount;
+            // CORREÇÃO: Exibir a data no formato YYYY-MM-DD para o input date
+            document.getElementById('editDizimoDate').value = payment.date;
+            editDizimoModal.style.display = 'flex';
+        }
+
+        // Delete entry
+        function deleteEntry(id) {
+            if (confirm('Tem certeza que deseja excluir esta entrada?')) {
+                entries = entries.filter(entry => entry.id !== id);
+                saveData();
+                renderEntries();
+                updateStats();
+                renderTimeline();
+                renderManualCharts();
+                showToast('Entrada excluída com sucesso!');
+            }
+        }
+
+        // Delete dizimo payment
+        function deleteDizimo(id) {
+            if (confirm('Tem certeza que deseja excluir este pagamento do dízimo?')) {
+                dizimoPayments = dizimoPayments.filter(payment => payment.id !== id);
+                saveData();
+                renderDizimoHistory();
+                updateStats();
+                renderTimeline();
+                renderManualCharts();
+                showToast('Pagamento excluído com sucesso!');
+            }
+        }
+
+        // Edit entry form submit
+        editEntryForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const id = parseInt(document.getElementById('editEntryId').value);
+            const amount = parseFloat(document.getElementById('editAmount').value);
+            const description = document.getElementById('editDescription').value.trim();
+            const date = document.getElementById('editDate').value;
+            
+            if (!amount || amount <= 0) {
+                showToast('Por favor, insira um valor válido.');
+                return;
+            }
+            
+            if (!description) {
+                showToast('Por favor, adicione uma descrição.');
+                return;
+            }
+            
+            if (!date) {
+                showToast('Por favor, selecione uma data.');
+                return;
+            }
+            
+            // CORREÇÃO: Garantir que a data esteja no formato correto
+            const formattedDate = formatDateForStorage(date);
+            
+            const index = entries.findIndex(entry => entry.id === id);
+            if (index !== -1) {
+                entries[index] = {
+                    id: id,
+                    amount: amount,
+                    description: description,
+                    date: formattedDate, // Usar data formatada
+                    timestamp: new Date().toISOString()
+                };
+                
+                saveData();
+                renderEntries();
+                updateStats();
+                renderTimeline();
+                renderManualCharts();
+                editEntryModal.style.display = 'none';
+                showToast('Entrada atualizada com sucesso!');
+            }
+        });
+
+        // Edit dizimo form submit
+        editDizimoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const id = parseInt(document.getElementById('editDizimoId').value);
+            const amount = parseFloat(document.getElementById('editDizimoAmount').value);
+            const date = document.getElementById('editDizimoDate').value;
+            
+            if (!amount || amount <= 0) {
+                showToast('Por favor, insira um valor válido.');
+                return;
+            }
+            
+            if (!date) {
+                showToast('Por favor, selecione uma data.');
+                return;
+            }
+            
+            // CORREÇÃO: Garantir que a data esteja no formato correto
+            const formattedDate = formatDateForStorage(date);
+            
+            const index = dizimoPayments.findIndex(payment => payment.id === id);
+            if (index !== -1) {
+                dizimoPayments[index] = {
+                    id: id,
+                    amount: amount,
+                    date: formattedDate, // Usar data formatada
+                    timestamp: new Date().toISOString()
+                };
+                
+                saveData();
+                renderDizimoHistory();
+                updateStats();
+                renderTimeline();
+                renderManualCharts();
+                editDizimoModal.style.display = 'none';
+                showToast('Pagamento atualizado com sucesso!');
+            }
+        });
+
+        // Render entries in history
+        function renderEntries() {
+            if (entries.length === 0) {
+                noHistory.style.display = 'block';
+                historyList.innerHTML = '';
+                historyList.appendChild(noHistory);
+                return;
+            }
+
+            noHistory.style.display = 'none';
+            historyList.innerHTML = '';
+
+            entries.forEach(entry => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                // CORREÇÃO: Formatar a data para exibição no formato DD/MM/YYYY
+                const displayDate = new Date(entry.date).toLocaleDateString('pt-BR');
+                item.innerHTML = `
+                    <div>
+                        <div class="history-desc">${entry.description}</div>
+                        <div class="history-date">${displayDate}</div>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div class="history-amount">${formatCurrency(entry.amount)}</div>
+                        <div class="action-buttons">
+                            <button class="action-btn edit-btn" onclick="openEditEntry(${JSON.stringify(entry).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteEntry(${entry.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                historyList.appendChild(item);
+            });
+        }
+
+        // Render dizimo payment history
+        function renderDizimoHistory() {
+            if (dizimoPayments.length === 0) {
+                noDizimoHistory.style.display = 'block';
+                dizimoHistoryList.innerHTML = '';
+                dizimoHistoryList.appendChild(noDizimoHistory);
+                return;
+            }
+
+            noDizimoHistory.style.display = 'none';
+            dizimoHistoryList.innerHTML = '';
+
+            dizimoPayments.forEach(payment => {
+                const item = document.createElement('div');
+                item.className = 'history-item paid-item';
+                // CORREÇÃO: Formatar a data para exibição no formato DD/MM/YYYY
+                const displayDate = new Date(payment.date).toLocaleDateString('pt-BR');
+                item.innerHTML = `
+                    <div>
+                        <div class="history-desc">Pagamento do Dízimo</div>
+                        <div class="history-date">${displayDate}</div>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                        <div class="history-amount paid-amount">${formatCurrency(payment.amount)}</div>
+                        <div class="action-buttons">
+                            <button class="action-btn edit-btn" onclick="openEditDizimo(${JSON.stringify(payment).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteDizimo(${payment.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                dizimoHistoryList.appendChild(item);
+            });
+        }
+
+        // Format date for display (DD/MM/YYYY)
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        // CORREÇÃO: Função para calcular o status geral do dízimo baseado em meses pendentes
+        function calculateOverallDizimoStatus() {
+            const monthlyData = getMonthlyData();
+            const sortedKeys = Object.keys(monthlyData).sort((a, b) => new Date(b + '-01') - new Date(a + '-01'));
+            
+            // Se não houver dados mensais, considerar como pago
+            if (sortedKeys.length === 0) {
+                return true;
+            }
+            
+            // Verificar se todos os meses estão pagos
+            for (const key of sortedKeys) {
+                const data = monthlyData[key];
+                const paidThisMonth = getPaidAmountForMonth(key);
+                const epsilon = 0.01; // Margem de erro para arredondamentos
+                
+                // Se encontrar pelo menos um mês pendente, o status geral é pendente
+                if (paidThisMonth < (data.dizimo - epsilon)) {
+                    return false;
+                }
+            }
+            
+            // Se todos os meses estiverem pagos, o status geral é pago
+            return true;
+        }
+
+        // Update stats
+        function updateStats() {
+            const total = entries.reduce((sum, entry) => sum + entry.amount, 0);
+            const dizimo = total * (dizimoPercentage / 100);
+            const paidDizimo = dizimoPayments.reduce((sum, payment) => sum + payment.amount, 0);
+            
+            totalBalanceEl.textContent = formatCurrency(total);
+            dizimoValueEl.textContent = formatCurrency(dizimo);
+            paidDizimoValueEl.textContent = formatCurrency(paidDizimo);
+            totalEntriesEl.textContent = entries.length;
+            totalDizimoEl.textContent = formatCurrency(dizimo);
+            totalPaidDizimoEl.textContent = formatCurrency(paidDizimo);
+
+            // CORREÇÃO: Calcular status geral corretamente baseado em todos os meses
+            const isPaid = calculateOverallDizimoStatus();
+            const statusIndicator = document.querySelector('.status-indicator');
+            const statusText = document.querySelector('.status-text');
+            
+            if (isPaid) {
+                statusIndicator.className = 'status-indicator status-paid';
+                statusText.textContent = 'Pago';
+                statusText.className = 'status-text';
+                statusText.style.color = 'var(--paid)';
+            } else {
+                statusIndicator.className = 'status-indicator status-pending';
+                statusText.textContent = 'Pendente';
+                statusText.className = 'status-text';
+                statusText.style.color = 'var(--dizimo)';
+            }
+
+            // Monthly stats
+            const monthlyData = getMonthlyData();
+            const monthlyTotals = Object.values(monthlyData).map(m => m.total);
+            const avgMonthly = monthlyTotals.length ? (monthlyTotals.reduce((a, b) => a + b, 0) / monthlyTotals.length) : 0;
+            
+            avgMonthlyEl.textContent = formatCurrency(avgMonthly);
+            
+            // Max entry
+            const maxEntry = entries.length ? Math.max(...entries.map(e => e.amount)) : 0;
+            maxEntryEl.textContent = formatCurrency(maxEntry);
+            
+            // Recent entries
+            recentEntriesEl.innerHTML = '';
+            const recent = entries.slice(0, 5);
+            if (recent.length === 0) {
+                recentEntriesEl.innerHTML = '<p>Nenhuma entrada registrada.</p>';
+            } else {
+                const list = document.createElement('ul');
+                list.style.listStyle = 'none';
+                recent.forEach(entry => {
+                    const li = document.createElement('li');
+                    li.style.marginBottom = '8px';
+                    li.innerHTML = `<strong>${formatDate(entry.date)}</strong>: ${entry.description} - ${formatCurrency(entry.amount)}`;
+                    list.appendChild(li);
+                });
+                recentEntriesEl.appendChild(list);
+            }
+        }
+
+        // Get monthly data - CORRIGIDO
+        function getMonthlyData() {
+            const monthly = {};
+            
+            entries.forEach(entry => {
+                // CORREÇÃO: Usar a função corrigida que extrai diretamente da string
+                const monthYear = getMonthYearFromDate(entry.date);
+                
+                if (!monthYear) return; // Pular entradas com data inválida
+                
+                if (!monthly[monthYear]) {
+                    monthly[monthYear] = {
+                        total: 0,
+                        dizimo: 0,
+                        entries: []
+                    };
+                }
+                
+                monthly[monthYear].total += entry.amount;
+                monthly[monthYear].dizimo += entry.amount * (dizimoPercentage / 100);
+                monthly[monthYear].entries.push(entry);
+            });
+            
+            return monthly;
+        }
+
+        // Calculate paid amount for a specific month - CORRIGIDO
+        function getPaidAmountForMonth(monthYear) {
+            let totalPaid = 0;
+            
+            // Iterar por todos os pagamentos
+            dizimoPayments.forEach(payment => {
+                // CORREÇÃO: Usar a mesma função para consistência
+                const paymentMonthYear = getMonthYearFromDate(payment.date);
+                
+                if (!paymentMonthYear) return; // Pular pagamentos com data inválida
+                
+                // Se o pagamento foi feito no mesmo mês/ano
+                if (paymentMonthYear === monthYear) {
+                    totalPaid += payment.amount;
+                }
+            });
+            
+            return totalPaid;
+        }
+
+        // Render timeline - CORRIGIDO
+        function renderTimeline() {
+            timelineEl.innerHTML = '';
+            const monthlyData = getMonthlyData();
+            
+            // Sort by date descending
+            const sortedKeys = Object.keys(monthlyData).sort((a, b) => {
+                // Comparar strings YYYY-MM diretamente
+                return b.localeCompare(a);
+            });
+            
+            if (sortedKeys.length === 0) {
+                timelineEl.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--gray);">Nenhuma entrada mensal registrada.</div>';
+                return;
+            }
+            
+            sortedKeys.forEach(key => {
+                const data = monthlyData[key];
+                // Extrair ano e mês da chave YYYY-MM
+                const [year, month] = key.split('-');
+                const date = new Date(parseInt(year), parseInt(month) - 1, 1);
+                const monthName = date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+                
+                // Calculate paid amount for this specific month - USANDO A FUNÇÃO CORRIGIDA
+                const paidThisMonth = getPaidAmountForMonth(key);
+                
+                // CORREÇÃO: Calcular status mensal corretamente
+                const epsilon = 0.01;
+                const isMonthPaid = paidThisMonth >= (data.dizimo - epsilon);
+                
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.innerHTML = `
+                    <div class="timeline-date">${monthName}</div>
+                    <div class="timeline-content">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;">
+                            <span>Total:</span>
+                            <strong>${formatCurrency(data.total)}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;">
+                            <span>Dízimo (${dizimoPercentage}%):</span>
+                            <strong class="dizimo-value">${formatCurrency(data.dizimo)}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;">
+                            <span>Dízimo Pago:</span>
+                            <strong class="paid-value">${formatCurrency(paidThisMonth)}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem;">
+                            <span>Status:</span>
+                            <strong>
+                                ${isMonthPaid ? 
+                                    '<span style="color: var(--paid);"><i class="fas fa-check-circle"></i> Pago</span>' : 
+                                    '<span style="color: var(--dizimo);"><i class="fas fa-exclamation-circle"></i> Pendente</span>'
+                                }
+                            </strong>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 0.85rem; color: var(--gray);">
+                            ${data.entries.length} entrada(s)
+                        </div>
+                    </div>
+                `;
+                timelineEl.appendChild(item);
+            });
+        }
+
+        // Manual Chart Rendering (No Chart.js dependency)
+        function renderManualCharts() {
+            const monthlyData = getMonthlyData();
+            const sortedKeys = Object.keys(monthlyData).sort((a, b) => a.localeCompare(b));
+            
+            // Clear containers
+            monthlyChartContainer.innerHTML = '';
+            dizimoChartContainer.innerHTML = '';
+            
+            if (sortedKeys.length === 0) {
+                monthlyChartContainer.innerHTML = `
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-bar"></i>
+                        <h4>Sem dados para exibir</h4>
+                        <p>Adicione entradas para ver os gráficos</p>
+                    </div>
+                `;
+                dizimoChartContainer.innerHTML = `
+                    <div class="chart-placeholder">
+                        <i class="fas fa-percentage"></i>
+                        <h4>Sem dados para exibir</h4>
+                        <p>O valor do dízimo será calculado automaticamente</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Find max values for scaling
+            const maxTotal = Math.max(...sortedKeys.map(key => monthlyData[key].total));
+            const maxDizimo = Math.max(...sortedKeys.map(key => monthlyData[key].dizimo));
+            
+            // Render monthly chart
+            sortedKeys.forEach(key => {
+                const data = monthlyData[key];
+                // Extrair ano e mês da chave YYYY-MM
+                const [year, month] = key.split('-');
+                const date = new Date(parseInt(year), parseInt(month) - 1, 1);
+                const label = date.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' });
+                
+                // Calculate height as percentage (max 80% of container)
+                const heightPercent = maxTotal > 0 ? (data.total / maxTotal) * 80 : 0;
+                const height = Math.max(15, heightPercent); // Minimum height 15px
+                
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${height}%`;
+                bar.innerHTML = `
+                    <div class="chart-value">${formatCurrency(data.total)}</div>
+                    <div class="chart-label">${label}</div>
+                `;
+                monthlyChartContainer.appendChild(bar);
+            });
+            
+            // Render dizimo chart
+            sortedKeys.forEach(key => {
+                const data = monthlyData[key];
+                // Extrair ano e mês da chave YYYY-MM
+                const [year, month] = key.split('-');
+                const date = new Date(parseInt(year), parseInt(month) - 1, 1);
+                const label = date.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' });
+                
+                // Calculate height as percentage (max 80% of container)
+                const heightPercent = maxDizimo > 0 ? (data.dizimo / maxDizimo) * 80 : 0;
+                const height = Math.max(15, heightPercent); // Minimum height 15px
+                
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar dizimo-bar';
+                bar.style.height = `${height}%`;
+                bar.innerHTML = `
+                    <div class="chart-value">${formatCurrency(data.dizimo)}</div>
+                    <div class="chart-label">${label}</div>
+                `;
+                dizimoChartContainer.appendChild(bar);
+            });
+        }
+
+        // Export data
+        exportDataBtn.addEventListener('click', () => {
+            const dataStr = JSON.stringify({
+                entries,
+                dizimoPayments,
+                dizimoPercentage,
+                exportedAt: new Date().toISOString()
+            }, null, 2);
+            
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `carteira-inteligente-${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Dados exportados com sucesso!');
+        });
+
+        // Import data
+        importDataBtn.addEventListener('click', () => {
+            importFile.click();
+        });
+
+        importFile.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.entries && Array.isArray(data.entries)) {
+                        entries = data.entries;
+                        dizimoPayments = data.dizimoPayments || [];
+                        if (data.dizimoPercentage) {
+                            dizimoPercentage = data.dizimoPercentage;
+                            dizimoPercent.value = dizimoPercentage;
+                            dizimoPercentValue.textContent = `${dizimoPercentage}%`;
+                        }
+                        saveData();
+                        renderEntries();
+                        renderDizimoHistory();
+                        updateStats();
+                        renderTimeline();
+                        renderManualCharts();
+                        showToast('Dados importados com sucesso!');
+                    } else {
+                        throw new Error('Formato inválido');
+                    }
+                } catch (err) {
+                    showToast('Erro ao importar dados. Verifique o arquivo.');
+                    console.error(err);
+                }
+                
+                // Reset input
+                importFile.value = '';
+            };
+            reader.readAsText(file);
+        });
+
+        // Clear data
+        clearDataBtn.addEventListener('click', () => {
+            if (confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+                entries = [];
+                dizimoPayments = [];
+                saveData();
+                renderEntries();
+                renderDizimoHistory();
+                updateStats();
+                renderTimeline();
+                renderManualCharts();
+                showToast('Todos os dados foram limpos.');
+            }
+        });
+
+        // Settings
+        dizimoPercent.addEventListener('input', () => {
+            dizimoPercentage = parseFloat(dizimoPercent.value);
+            dizimoPercentValue.textContent = `${dizimoPercentage}%`;
+            updateStats();
+            renderTimeline();
+            renderManualCharts();
+        });
+
+        saveSettingsBtn.addEventListener('click', () => {
+            localStorage.setItem('dizimoPercentage', dizimoPercentage);
+            showToast('Configurações salvas com sucesso!');
+        });
+
+        // Toast notifications
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Expose functions to global scope for inline onclick handlers
+        window.openEditEntry = openEditEntry;
+        window.openEditDizimo = openEditDizimo;
+        window.deleteEntry = deleteEntry;
+        window.deleteDizimo = deleteDizimo;
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
